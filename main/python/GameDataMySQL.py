@@ -13,7 +13,7 @@ def getintset(localhost):
         intnameset=intnameset+(newresult[i][0],)
     return intnameset
 
-def getintagentstates(interactionID): #connect DB and get all agents' states based on interaction  
+def getintagentstates(interactionID): #connect DB and get all agents' states based on interaction
     db=MySQLdb.connect("localhost","host","host","lccgame")
     cursor=db.cursor()
     cursor.execute("SELECT STATE FROM backup_scalsc_states WHERE COMM_ID=%r" %interactionID)
@@ -23,23 +23,23 @@ def getintagentstates(interactionID): #connect DB and get all agents' states bas
     db.close()
     agentdef=(agentstates,protocolname[0][0])
     return agentdef
-    
+
 #find out how many lines in one agent state
-def getclauseset(agentstate):    
+def getclauseset(agentstate):
     pattern_n=re.compile(r'.*?\\n')
     search_n=re.findall(pattern_n,agentstate)
     return search_n
-    
-    #get agent role and ID from #2 line 
+
+    #get agent role and ID from #2 line
 def getagentinfo(agentinfoclause):
     pattern_agentinfo=re.compile(r'a\(\s*(?P<agentrolename>\w*)\((?P<agentrolevars>.*)\),(?P<agentid>.*)\)::=\\n')
     agent_role_name=re.search(pattern_agentinfo,agentinfoclause).group('agentrolename')
     agent_role_vars=re.search(pattern_agentinfo,agentinfoclause).group('agentrolevars').split(",")
     agent_id=re.search(pattern_agentinfo,agentinfoclause).group('agentid')
     return (agent_role_name,agent_role_vars,agent_id)
-    
-    #get message name and var 
-def getmessageinfo(mbody): 
+
+    #get message name and var
+def getmessageinfo(mbody):
     pattern_dir=re.compile(r'(=>|<=)')
     search_dir=re.findall(pattern_dir,mbody)
     if search_dir:
@@ -60,9 +60,10 @@ def getmessageinfo(mbody):
             mtarget=re.search(pattern_mtarget,mbody).group('mtarget')
             return (mname,mvars,mdir,mtarget)
     else:
-        return False      
+        return False
 
-def datatransferMySQL(dbaddress):
+#{intid,protocolid,role:{rname,rvars},messages:{mname,mvars,mdir,mtarget}}
+def getinterseqMySQL(dbaddress):
     #get all happened interactions
     intset=getintset(dbaddress)
     #get agents' states in per interaction
@@ -74,10 +75,10 @@ def datatransferMySQL(dbaddress):
         intprotocolid=getintagentstates(intid)[1]
         startpoint=len(interaction_behaviors)
         for i in range(len(intagentstates)):
-            interaction_behaviors=interaction_behaviors+[{'intid':intid,'protocolid':intprotocolid},]      
+            interaction_behaviors=interaction_behaviors+[{'intid':intid,'protocolid':intprotocolid},]
         for i in range(len(intagentstates)):
             clauseset=getclauseset(str(intagentstates[i]))
-            agent_info=getagentinfo(clauseset[1]) 
+            agent_info=getagentinfo(clauseset[1])
             interaction_behaviors[startpoint+i]['role']={'rname':agent_info[0],'rvars':agent_info[1]}
             interaction_behaviors[startpoint+i]['messages']=[]
             for linepoint in range(2,len(clauseset)):
@@ -85,7 +86,3 @@ def datatransferMySQL(dbaddress):
                     minfo=getmessageinfo(clauseset[linepoint])
                     interaction_behaviors[startpoint+i]['messages']=interaction_behaviors[startpoint+i]['messages']+[{'mname':minfo[0],'mvars':minfo[1],'mdir':minfo[2],'mtarget':minfo[3]},]
     return interaction_behaviors
-
-
-
-
