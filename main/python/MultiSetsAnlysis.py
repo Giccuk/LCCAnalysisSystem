@@ -30,7 +30,7 @@ for i in range(len(offerratio)):
 #==========================
 #seeds data
 #==========================
-datasrc="/Users/cancui/workspace/virENV/lccbehavioranalysis/src/main/resources/seeds/seeds_dataset.txt"
+datasrc="/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/seeds/seeds_dataset.txt"
 with open(datasrc,"r") as seedssrcfile:
 	  seedssrclines=seedssrcfile.readlines()
 seedssrcdata=[]
