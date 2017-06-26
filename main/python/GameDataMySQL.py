@@ -1,6 +1,9 @@
 import MySQLdb
 import re
 
+#============================================================================
+# Connect to MYSQL and pick out the data
+#============================================================================
 def getintset(localhost):
     db=MySQLdb.connect(localhost,"host","host","lccgame")
     cursor=db.cursor()
@@ -62,8 +65,13 @@ def getmessageinfo(mbody):
     else:
         return False
 
-#{intid,protocolid,role:{rname,rvars},messages:{mname,mvars,mdir,mtarget}}
-def getinterseqMySQL(dbaddress):
+#interaction_behaviors=[
+# {intid,protocolid,role:{rname,rvars},messages:{mname,mvars,mdir,mtarget}},
+# {intid,protocolid,role:{rname,rvars},messages:{mname,mvars,mdir,mtarget}},
+# ...
+# {intid,protocolid,role:{rname,rvars},messages:{mname,mvars,mdir,mtarget}}
+# ]
+def getgamedataMySQL(dbaddress):
     #get all happened interactions
     intset=getintset(dbaddress)
     #get agents' states in per interaction
@@ -86,3 +94,73 @@ def getinterseqMySQL(dbaddress):
                     minfo=getmessageinfo(clauseset[linepoint])
                     interaction_behaviors[startpoint+i]['messages']=interaction_behaviors[startpoint+i]['messages']+[{'mname':minfo[0],'mvars':minfo[1],'mdir':minfo[2],'mtarget':minfo[3]},]
     return interaction_behaviors
+
+#==================================================
+#Query for information from interacion sequences
+#==================================================
+
+def getofferratio(gamedata):
+    offerratio=[]
+    for i in range(len(gamedata)):
+        if (gamedata[i]['protocolid']=='ultimategame' and gamedata[i]['role']['rname']=='proposer'):
+            wholeamount=gamedata[i]['role']['rvars'][0]
+            for j in range(len(gamedata[i]['messages'])):
+                if gamedata[i]['messages'][j]['mname']=='offer':
+                    theratio=float(gamedata[i]['messages'][j]['mvars'][0])/float(wholeamount)
+                    offerratio=offerratio+[theratio,]
+    return offerratio
+
+def getacceptornotratio(gamedata):
+    acceptratio=[]
+    rejectratio=[]
+    for i in range(len(gamedata)):
+        if (gamedata[i]['protocolid']=='ultimategame' and gamedata[i]['role']['rname']=='responder'):
+            acceptamount=0
+            rejectamount=0
+            theratio=0
+            totalamount=gamedata[i]['role']['rvars'][0]
+            for j in range(len(gamedata[i]['messages'])):
+                if gamedata[i]['messages'][j]['mname']=='decide' and gamedata[i]['messages'][j]['mvars'][0]=='accept':
+                    acceptamount=gamedata[i]['messages'][j]['mvars'][1]
+                elif gamedata[i]['messages'][j]['mname']=='decide' and gamedata[i]['messages'][j]['mvars'][0]=='reject':
+                    rejectamount=gamedata[i]['messages'][j]['mvars'][1]
+                if acceptamount!=0:
+                    theratio=round(float(acceptamount)/float(totalamount),2)
+                    acceptratio=acceptratio+[theratio,]
+                if rejectamount!=0:
+                    theratio=round(float(rejectamount)/float(totalamount),2)
+                    rejectratio=rejectratio+[theratio,]
+    return [acceptratio,rejectratio]
+
+def getinvestratio(gamedata):
+    investratio=[]
+    for i in range(len(gamedata)):
+        if (gamedata[i]['protocolid']=='trustgame_simple' and gamedata[i]['role']['rname']=='investor'):
+            investorown=gamedata[i]['role']['rvars'][0]
+            for j in range(len(gamedata[i]['messages'])):
+                if gamedata[i]['messages'][j]['mname']=='offer':
+                    theratio=float(gamedata[i]['messages'][j]['mvars'][0])/float(investorown)
+            investratio=investratio+[theratio,]
+    return investratio
+
+def getrepayratio(gamedata):
+    repayratio=[]
+    for i in range(len(gamedata)):
+        if (gamedata[i]['protocolid']=='trustgame_simple' and gamedata[i]['role']['rname']=='trustee'):
+            exchangeratio=gamedata[i]['role']['rvars'][0]
+            offeramount=0
+            for j in range(len(gamedata[i]['messages'])):
+                if gamedata[i]['messages'][j]['mname']=='offer':
+                    offeramount=gamedata[i]['messages'][j]['mvars'][0]
+                if gamedata[i]['messages'][j]['mname']=='repay':
+                    repayamount=gamedata[i]['messages'][j]['mvars'][0]
+            if offeramount!=0:
+                theratio=float(repayamount)/(float(offeramount)*float(exchangeratio))
+                repayratio=repayratio+[round(theratio,2),]
+    return repayratio
+
+#print "proposer's offerratio is %s" %offerratio
+#print "responder's acceptratio is %s" %acceptratio
+#print "responder's rejectratio %s" %rejectratio
+#print "investor's investratio is %s" %investratio
+#print "trustee's repayratio is %s" %repayratio
