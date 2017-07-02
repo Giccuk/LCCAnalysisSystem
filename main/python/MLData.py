@@ -1,6 +1,7 @@
 import random,re,csv
 import numpy as np
 import GameDataMySQL
+from sklearn.model_selection import train_test_split
 #=============================================
 #ILPD (Indian Liver Patient Dataset) Data Set
 #=============================================
@@ -136,7 +137,7 @@ def get_interactiondata_MySQL(dbaddress):
 #   no_depessive: OR:[0.3,0.5], AR:[0.6,1.0], IR:[0.1,0.3], RR:[0.1,0.3]
 #3. "1" for depression, "0" for not_depression
 #==========================
-def build_interactiondataset():
+def build_interactiondata():
 	behavior_data=[]
 	for i in range(1,10000):
 		dep_offerrate = random.choice(range(6, 10))
@@ -158,13 +159,9 @@ def build_interactiondataset():
 def get_interactiondata_sim():
 		behaviordata=np.genfromtxt('/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/behaviordata/behaviordata.csv',delimiter=',')
 		data_shape=behaviordata.shape
-		sample_num=data_shape[0]
-		feature_num=data_shape[1]-1
-		train_sample_num=int(round(sample_num*0.6))
-		train_features=behaviordata[0:train_sample_num,0:feature_num]
-		train_labels=behaviordata[0:train_sample_num,feature_num]
-		test_features=behaviordata[train_sample_num:sample_num,0:feature_num]
-		test_labels=behaviordata[train_sample_num:sample_num,feature_num]
+		feature_indx=data_shape[1]-1
+		train_features,test_features,train_labels,test_labels=train_test_split(
+			behaviordata[:,0:feature_indx],behaviordata[:,feature_indx],test_size=0.4,random_state=0)
 		return{'train_features':train_features,
 			   'train_labels':train_labels,
 			   'test_features':test_features,

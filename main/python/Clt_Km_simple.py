@@ -15,9 +15,16 @@ def addone(x): return x+1
 X = np.array(train_features)
 kmeans = KMeans(n_clusters=2, random_state=0).fit(X)
 kresult=kmeans.predict(test_features)
-kresult_addone=map(addone,kresult)
+for i in range(len(kresult)):
+	if kresult[i]==0:
+		kresult[i]=1
+	else:
+		kresult[i]=0
+
 dis=0
 for i in range(len(kresult)):
 	if kresult[i]!=test_labels[i]:
+		print (kresult[i],test_labels[i])
 		dis+=1
 
+print dis
