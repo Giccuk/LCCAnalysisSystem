@@ -1,5 +1,6 @@
 import MySQLdb
 import re
+import random
 
 #============================================================================
 # Connect to MYSQL and pick out the data
@@ -164,3 +165,26 @@ def getrepayratio(gamedata):
 #print "responder's rejectratio %s" %rejectratio
 #print "investor's investratio is %s" %investratio
 #print "trustee's repayratio is %s" %repayratio
+
+#=================
+#game data
+#=================
+def get_interactiondata_MySQL(dbaddress):
+	gamemessages=getgamedataMySQL(dbaddress)
+	offerratio=getofferratio(gamemessages)
+	acceptornotratio=getacceptornotratio(gamemessages)
+	investratio=getinvestratio(gamemessages)
+	repayratio=getrepayratio(gamemessages)
+	samples=[]
+	labels=[]
+	for i in range(len(offerratio)):
+		if i<len(acceptornotratio[0]):
+			#print [offerratio[i],acceptornotratio[0][i]]
+			samples=samples+[[offerratio[i],acceptornotratio[0][i]]]
+		else:
+			j=i-len(acceptornotratio[0])
+			#print [offerratio[i],acceptornotratio[1][j]]
+			samples=samples+[[offerratio[i],acceptornotratio[1][j]]]
+		label_rand=random.randint(0,2)
+		labels=labels+[label_rand]
+	return {'features':samples,'labels':labels}

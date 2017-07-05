@@ -1,14 +1,12 @@
 import random,re,csv
 import numpy as np
-import GameDataMySQL
 from sklearn.model_selection import train_test_split
 #=============================================
 #ILPD (Indian Liver Patient Dataset) Data Set
 #=============================================
-def get_ilpddata():
-	ilpddata = np.genfromtxt(
-		'/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/ilpd/ilpddata2.csv',
-		delimiter=',')
+#'/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/ilpddata/ilpddata2.csv',
+def get_ilpddata(datafiledir):
+	ilpddata = np.genfromtxt(datafiledir, delimiter=',')
 	dataset_shape=ilpddata.shape
 	label_indx=dataset_shape[1]-1
 	train_sample_num=int(round(dataset_shape[0]*0.6))
@@ -43,9 +41,9 @@ def get_ilpddata():
 # seeds data
 #=======================
 #read data from file
-def get_seedsdata():
-	datasrc="/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/seeds/seeds_dataset.txt"
-	with open(datasrc,"r") as seedssrcfile:
+#"/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/seeds/seeds_dataset.txt"
+def get_seedsdata(datafiledir):
+	with open(datafiledir,"r") as seedssrcfile:
 		  seedssrclines=seedssrcfile.readlines()
 
 	#divide strings by ","
@@ -107,39 +105,17 @@ def get_seedsdata():
 			'test_labels':test_labels,
 			'test_labels_mat':test_labels_mat}
 
-#=================
-#game data
-#=================
-def get_interactiondata_MySQL(dbaddress):
-	gamemessages=GameDataMySQL.getgamedataMySQL(dbaddress)
-	offerratio=GameDataMySQL.getofferratio(gamemessages)
-	acceptornotratio=GameDataMySQL.getacceptornotratio(gamemessages)
-	investratio=GameDataMySQL.getinvestratio(gamemessages)
-	repayratio=GameDataMySQL.getrepayratio(gamemessages)
-	samples=[]
-	labels=[]
-	for i in range(len(offerratio)):
-		if i<len(acceptornotratio[0]):
-			#print [offerratio[i],acceptornotratio[0][i]]
-			samples=samples+[[offerratio[i],acceptornotratio[0][i]]]
-		else:
-			j=i-len(acceptornotratio[0])
-			#print [offerratio[i],acceptornotratio[1][j]]
-			samples=samples+[[offerratio[i],acceptornotratio[1][j]]]
-		label_rand=random.randint(0,2)
-		labels=labels+[label_rand]
-	return {'features':samples,'labels':labels}
-
 #==========================
-#simulated interaction data
+# Simulated interaction data
 #1. OR:offer_rate, AR:accept_rate, IR:invest_rate, RR:repay_rate
 #2. depressive: OR:[0.6,0,9], AR:[0.4,1.0], IR:[0.5,0.7], RR:[0.4,0.6]
 #   no_depessive: OR:[0.3,0.5], AR:[0.6,1.0], IR:[0.1,0.3], RR:[0.1,0.3]
 #3. "1" for depression, "0" for not_depression
 #==========================
-def build_interactiondata():
+#'/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/behaviordata_sim/behaviordata_sim.csv'
+def build_interactiondata(datafiledir):
 	behavior_data=[]
-	for i in range(1,10000):
+	for i in range(1,579):
 		dep_offerrate = random.choice(range(6, 10))
 		dep_acceptrate = random.choice(range(4, 10))
 		dep_investrate = random.choice(range(5, 8))
@@ -151,13 +127,14 @@ def build_interactiondata():
 		behavior_data=behavior_data+[[dep_offerrate,dep_acceptrate,dep_investrate, dep_repayrate,1]]
 		behavior_data=behavior_data+[[notdep_offerrate,notdep_acceptrate,notdep_investrate,notdep_repayrate,0]]
 	random.shuffle(behavior_data)
-	with open('/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/behaviordata/behaviordata.csv','wb') as datafile:
+	with open(datafiledir,'wb') as datafile:
 		datawriter=csv.writer(datafile)
 		for line in behavior_data:
 			datawriter.writerow(line)
 
-def get_interactiondata_sim():
-		behaviordata=np.genfromtxt('/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/behaviordata/behaviordata.csv',delimiter=',')
+#'/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/behaviordata_sim/behaviordata_sim.csv'
+def get_interactiondata_sim(datafiledir):
+		behaviordata=np.genfromtxt(datafiledir,delimiter=',')
 		data_shape=behaviordata.shape
 		feature_indx=data_shape[1]-1
 		train_features,test_features,train_labels,test_labels=train_test_split(

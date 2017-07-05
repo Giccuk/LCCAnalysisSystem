@@ -4,9 +4,13 @@ from sklearn import svm
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_val_score
 
-#MLData.build_interactiondataset()
-svm_data=MLData.get_ilpddata()
-#svm_data=MLData.get_interactiondata_sim()
+interdatafiledir_sim='/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/behaviordata_sim/behaviordata_sim.csv'
+MLData.build_interactiondata(interdatafiledir_sim)
+new_data=MLData.get_interactiondata_sim(interdatafiledir_sim)
+
+ilpdatafiledir='/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/ilpddata/ilpddata2.csv'
+svm_data=MLData.get_ilpddata(ilpdatafiledir)
+
 train_labels=svm_data['train_labels']
 train_features=svm_data['train_features']
 test_labels=svm_data['test_labels']

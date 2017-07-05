@@ -6,10 +6,13 @@ import MLData
 #========================
 # DATA
 #========================
-train_labels=np.array(MLData.train_labels_mat)
-train_features=np.array(MLData.train_features)
-test_labels=np.array(MLData.test_labels_mat)
-test_features=np.array(MLData.test_features)
+seedsdatafiledir='/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/seeds/seeds_dataset.txt'
+seedsdata=MLData.get_seedsdata(seedsdatafiledir)
+
+train_labels=np.array(seedsdata['train_labels_mat'])
+train_features=np.array(seedsdata['train_features'])
+test_labels=np.array(seedsdata['test_labels_mat'])
+test_features=np.array(seedsdata['test_features'])
 
 #==========================
 # Set Network Structure

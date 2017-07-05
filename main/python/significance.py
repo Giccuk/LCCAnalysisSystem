@@ -4,6 +4,7 @@
 from scipy import stats
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
+
 a=[[0,1]]
 b=[0]
 for i in range(1,10):
@@ -17,4 +18,4 @@ train_features,test_features,train_labels,test_labels=train_test_split(
 )
 
 print train_features,train_labels
-#print stats.ttest_ind(a,b)
+print stats.ttest_ind(a,b)

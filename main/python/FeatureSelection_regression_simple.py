@@ -4,8 +4,10 @@ import numpy as np
 import MLData
 from sklearn.metrics import accuracy_score
 
-inputdata=MLData.get_interactiondata_sim()
-inputdata=MLData.get_ilpddata()
+interdatafiledir_sim='/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/behaviordata_sim/behaviordata_sim.csv'
+ilpddatafiledir='/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/ilpddata/ilpddata2.csv'
+inputdata=MLData.get_interactiondata_sim(interdatafiledir_sim)
+inputdata=MLData.get_ilpddata(ilpddatafiledir)
 
 train_labels_np=np.array(inputdata['train_labels'])
 train_features_np=np.array(inputdata['train_features'])
