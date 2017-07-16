@@ -1,20 +1,37 @@
 import random,re,csv
 import numpy as np
 from sklearn.model_selection import train_test_split
+
+
 #=============================================
 #ILPD (Indian Liver Patient Dataset) Data Set
+'''
+This data set contains 
+1. 416 liver patient records and 167 non liver patient records.
+2. This data set contains 441 male patient records and 142 female patient records. 
+Any patient whose age exceeded 89 is listed as being of age "90".
+3. attribution information:
+1) Age	Age of the patient 
+2) Gender	Gender of the patient (female:1, male:2)
+3) TB	Total Bilirubin 
+4) DB	Direct Bilirubin 
+5) Alkphos Alkaline Phosphotase 
+6) Sgpt Alamine Aminotransferase 
+7) Sgot Aspartate Aminotransferase 
+8) TP	Total Protiens 
+9) ALB	Albumin 
+10) A/G Ratio	Albumin and Globulin Ratio 
+11) Selector field used to split the data into two sets (labeled by the expert
+'''
 #=============================================
 #'/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/ilpddata/ilpddata2.csv',
 def get_ilpddata(datafiledir):
 	ilpddata = np.genfromtxt(datafiledir, delimiter=',')
 	dataset_shape=ilpddata.shape
 	label_indx=dataset_shape[1]-1
-	train_sample_num=int(round(dataset_shape[0]*0.6))
-	train_features=ilpddata[0:train_sample_num,0:label_indx]
-	train_labels=ilpddata[0:train_sample_num,label_indx]
-	test_features = ilpddata[train_sample_num:dataset_shape[0], 0:label_indx]
-	test_labels = ilpddata[train_sample_num:dataset_shape[0], label_indx]
-	#delete rows contain nan variables in train data sets
+    train_features,test_features,train_labels,test_labels=train_test_split(
+	ilpddata[:,0:label_indx],ilpddata[:,label_indx],test_size=0.4,random_state=0)
+    #delete rows contain nan variables in train data sets
 	nan_line_indx=[]
 	for i in range(0,train_features.shape[0]):
 		for j in train_features[i,:]:
@@ -23,6 +40,8 @@ def get_ilpddata(datafiledir):
 	if nan_line_indx:
 		train_features=np.delete(train_features,[nan_line_indx],0)
 		train_labels=np.delete(train_labels,[nan_line_indx],0)
+    print '========================='
+    print len(nan_line_indx)
 	# delete rows contain nan variables in test data sets
 	nan_line_indx = []
 	for i in range(0,test_features.shape[0]):
@@ -32,7 +51,7 @@ def get_ilpddata(datafiledir):
 	if nan_line_indx:
 		test_features=np.delete(train_features,[nan_line_indx],0)
 		test_labels=np.delete(train_labels,[nan_line_indx],0)
-	return {'train_features':train_features,
+    return {'train_features':train_features,
 			'train_labels':train_labels,
 			'test_features':test_features,
 			'test_labels':test_labels}
