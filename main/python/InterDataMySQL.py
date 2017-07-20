@@ -5,17 +5,17 @@ import random
 #============================================================================
 # Connect to MYSQL and pick out the data
 #============================================================================
-def getintset(localhost):
+def getallinterID(localhost):
     db=MySQLdb.connect(localhost,"host","host","lccgame")
     cursor=db.cursor()
     cursor.execute("SELECT COMM_ID FROM backup_scalsc_states ")
     db.close()
     queryresult=cursor.fetchall()
     newresult=tuple(set(queryresult))
-    intnameset=( )
+    allinterID=( )
     for i in range(len(newresult)):
-        intnameset=intnameset+(newresult[i][0],)
-    return intnameset
+        allinterID=allinterID+(newresult[i][0],)
+    return allinterID
 
 def getintagentstates(interactionID): #connect DB and get all agents' states based on interaction
     db=MySQLdb.connect("localhost","host","host","lccgame")
@@ -74,19 +74,19 @@ def getmessageinfo(mbody):
 # ]
 def getgamedataMySQL(dbaddress):
     #get all happened interactions
-    intset=getintset(dbaddress)
+    interIDset=getallinterID(dbaddress)
     #get agents' states in per interaction
-    intnum=0
+    internum=0
     interaction_behaviors=[]
-    for intnum in range(len(intset)):
-        intid=intset[intnum]
-        intagentstates=getintagentstates(intid)[0]
-        intprotocolid=getintagentstates(intid)[1]
+    for internum in range(len(interIDset)):
+        interID=interIDset[internum]
+        interagentstates=getintagentstates(interID)[0]
+        interprotocolID=getintagentstates(interID)[1]
         startpoint=len(interaction_behaviors)
-        for i in range(len(intagentstates)):
-            interaction_behaviors=interaction_behaviors+[{'intid':intid,'protocolid':intprotocolid},]
-        for i in range(len(intagentstates)):
-            clauseset=getclauseset(str(intagentstates[i]))
+        for i in range(len(interagentstates)):
+            interaction_behaviors=interaction_behaviors+[{'intid':interID,'protocolid':interprotocolID},]
+        for i in range(len(interagentstates)):
+            clauseset=getclauseset(str(interagentstates[i]))
             agent_info=getagentinfo(clauseset[1])
             interaction_behaviors[startpoint+i]['role']={'rname':agent_info[0],'rvars':agent_info[1]}
             interaction_behaviors[startpoint+i]['messages']=[]
@@ -160,11 +160,6 @@ def getrepayratio(gamedata):
                 repayratio=repayratio+[round(theratio,2),]
     return repayratio
 
-#print "proposer's offerratio is %s" %offerratio
-#print "responder's acceptratio is %s" %acceptratio
-#print "responder's rejectratio %s" %rejectratio
-#print "investor's investratio is %s" %investratio
-#print "trustee's repayratio is %s" %repayratio
 
 #=================
 #game data
@@ -188,3 +183,4 @@ def get_interactiondata_MySQL(dbaddress):
 		label_rand=random.randint(0,2)
 		labels=labels+[label_rand]
 	return {'features':samples,'labels':labels}
+
