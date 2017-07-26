@@ -214,7 +214,7 @@ def get_interactiondata_sim(datafiledir):
 #=========================================
 # insert data, get features and lables
 #=========================================
-def get_featureslabel(alldata,label_indx, featuresrate):
+def get_features_labels(alldata,label_indx,featuresrate):
     alldata_array=np.asarray(alldata)
     train_features, test_features, train_labels, test_labels = train_test_split(alldata_array[:, 0:label_indx],
                                                                                 alldata_array[:, label_indx],

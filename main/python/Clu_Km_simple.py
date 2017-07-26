@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score
 from sklearn import metrics
 
 interdatafiledir_sim='/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/behaviordata_sim/behaviordata_sim.csv'
-kmdata=MLData.get_interactiondata_sim(interdatafiledir_sim)
+kmdata=MLData.get_interdata_sim(interdatafiledir_sim)
 
 #iplddatafiledir='/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/ilpddata/ilpddata2.csv'
 #svm_data=MLData.get_ilpddata(iplddatafiledir)
