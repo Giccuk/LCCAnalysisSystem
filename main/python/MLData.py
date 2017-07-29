@@ -172,7 +172,7 @@ def get_mixdata(biodata, interdata):
     biodata_label_indx = len(biodata[0]) - 1
     interdata_label_indx = len(interdata[0]) - 1
     for i in range(0, len(biodata)):
-        mixdata = mixdata + [biodata[i][0:biodata_label_indx]+interdata[i][0:interdata_label_indx]+[biodata[i][biodata_label_indx]]]
+        mixdata = mixdata + [biodata[i][0:biodata_label_indx]+interdata[i][0:interdata_label_indx]]
     return mixdata
 
 

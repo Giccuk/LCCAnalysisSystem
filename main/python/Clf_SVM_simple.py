@@ -2,7 +2,7 @@ import MLData,random
 import numpy as np
 from sklearn import svm
 from sklearn.metrics import accuracy_score
-from sklearn.model_selection import cross_val_score
+
 
 #interdatafiledir_sim='/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/behaviordata_sim/behaviordata_sim.csv'
 #MLData.build_interactiondata(interdatafiledir_sim)
