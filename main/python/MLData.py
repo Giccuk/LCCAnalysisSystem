@@ -148,7 +148,7 @@ def get_seedsdata(datafiledir):
 # 3. "1" for depression, "0" for not_depression
 # ==========================
 # '/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/behaviordata_sim/behaviordata_sim.csv'
-def get_interdata_sim(biodata):
+def get_interdata_patterns_sim(biodata):
     label_indx = len(biodata[0]) - 1
     interdata = []
     for i in range(0, len(biodata)):
@@ -157,63 +157,29 @@ def get_interdata_sim(biodata):
             dep_acceptrate = random.choice(range(4, 10))
             dep_investrate = random.choice(range(5, 8))
             dep_repayrate = random.choice(range(4, 6))
-            interdata = interdata + [[dep_offerrate, dep_acceptrate, dep_investrate, dep_repayrate, 1]]
+            interdata = interdata + [[dep_offerrate, dep_acceptrate, dep_investrate, dep_repayrate]]
         else:
             notdep_offerrate = random.choice(range(3, 6))
             notdep_acceptrate = random.choice(range(6, 10))
             notdep_investrate = random.choice(range(1, 4))
             notdep_repayrate = random.choice(range(1, 4))
-            interdata = interdata + [[notdep_offerrate, notdep_acceptrate, notdep_investrate, notdep_repayrate, 0]]
+            interdata = interdata + [[notdep_offerrate, notdep_acceptrate, notdep_investrate, notdep_repayrate]]
     return interdata
 
-
-def get_mixdata(biodata, interdata):
-    mixdata = []
-    biodata_label_indx = len(biodata[0]) - 1
-    interdata_label_indx = len(interdata[0]) - 1
-    for i in range(0, len(biodata)):
-        mixdata = mixdata + [biodata[i][0:biodata_label_indx]+interdata[i][0:interdata_label_indx]]
-    return mixdata
-
-
-'''
-def build_interactiondata(datafiledir):
-	behavior_data=[]
-	for i in range(1,415):
-		dep_offerrate = random.choice(range(6, 10))
-		dep_acceptrate = random.choice(range(4, 10))
-		dep_investrate = random.choice(range(5, 8))
-		dep_repayrate = random.choice(range(4, 6))
-		behavior_data = behavior_data + [[dep_offerrate, dep_acceptrate, dep_investrate, dep_repayrate, 1]]
-	for i in range(1,166):
-		notdep_offerrate = random.choice(range(3, 6))
-		notdep_acceptrate = random.choice(range(6, 10))
-		notdep_investrate = random.choice(range(1, 4))
-		notdep_repayrate = random.choice(range(1, 4))
-		behavior_data=behavior_data+[[notdep_offerrate,notdep_acceptrate,notdep_investrate,notdep_repayrate,0]]
-	random.shuffle(behavior_data)
-	print len(behavior_data)
-	with open(datafiledir,'wb') as datafile:
-		datawriter=csv.writer(datafile)
-		for line in behavior_data:
-			datawriter.writerow(line)
-
-#'/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/behaviordata_sim/behaviordata_sim.csv'
-def get_interactiondata_sim(datafiledir):
-		behaviordata=np.genfromtxt(datafiledir,delimiter=',')
-		data_shape=behaviordata.shape
-
-		feature_indx=data_shape[1]-1
-		train_features,test_features,train_labels,test_labels=train_test_split(
-			behaviordata[:,0:feature_indx],behaviordata[:,feature_indx],test_size=0.4,random_state=0)
-		return{'train_features':train_features,
-			   'train_labels':train_labels,
-			   'test_features':test_features,
-			   'test_labels':test_labels}
-'''
 #=========================================
-# insert data, get features and lables
+# get mixdata_features
 #=========================================
+def get_mixdata_patterns(interdata,biodata):
+    num_interdata_features=len(interdata[0])-1
+    num_biodata_features=len(biodata[0])-1
+    mixdata_features=[]
+    for i in range(0,len(interdata)):
+        mixdata_features=mixdata_features+[biodata[i][0:num_biodata_features]+interdata[i][0:num_interdata_features]]
+    return mixdata_features
+
+#=============================
+# get data features and labels
+#=============================
 def get_features_labels(alldata,label_indx,featuresrate):
     alldata_array=np.asarray(alldata)
     train_features, test_features, train_labels, test_labels = train_test_split(alldata_array[:, 0:label_indx],
