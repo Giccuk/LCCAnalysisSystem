@@ -98,50 +98,8 @@ def get_seedsdata(datafiledir):
             seedsdata = seedsdata + [map(float, featureresult) + [float(seedssrcdata[linei][pos])]]
     return seedsdata
 
-
-'''
-	#build test and train sets
-	trainpos=range(0,31)+range(101,136)+range(181,210)
-	testpos=range(31,101)+range(136,181)
-	train_features=[]
-	train_labels=[]
-	test_features=[]
-	test_labels=[]
-	for i in trainpos:
-		train_features=train_features+[seedsdata[i][0:7]]
-		train_labels=train_labels+[seedsdata[i][7]]
-	for i in testpos:
-		test_features=test_features+[seedsdata[i][0:7]]
-		test_labels=test_labels+[seedsdata[i][7]]
-
-	train_labels_mat=[]
-	test_labels_mat=[]
-	for i in range(len(train_labels)):
-		if train_labels[i]==1:
-			train_labels_mat=train_labels_mat+[[1,0,0]]
-		elif train_labels[i]==2:
-			train_labels_mat=train_labels_mat+[[0,1,0]]
-		elif train_labels[i]==3:
-			train_labels_mat=train_labels_mat+[[0,0,1]]
-	for i in range(len(test_labels)):
-		if test_labels[i] == 1:
-				test_labels_mat = test_labels_mat + [[1, 0, 0]]
-		elif test_labels[i] == 2:
-				test_labels_mat = test_labels_mat + [[0, 1, 0]]
-		elif test_labels[i] == 3:
-				test_labels_mat = test_labels_mat + [[0, 0, 1]]
-
-	return {'train_features':train_features,
-			'train_labels':train_labels,
-			'train_labels_mat':train_labels_mat,
-			'test_features':test_features,
-			'test_labels':test_labels,
-			'test_labels_mat':test_labels_mat}
-'''
-
-
 # ==========================
-# Simulated interaction data
+# Get Simulated Interaction data
 # 1. OR:offer_rate, AR:accept_rate, IR:invest_rate, RR:repay_rate
 # 2. depressive: OR:[0.6,0,9], AR:[0.4,1.0], IR:[0.5,0.7], RR:[0.4,0.6]
 #   no_depessive: OR:[0.3,0.5], AR:[0.6,1.0], IR:[0.1,0.3], RR:[0.1,0.3]
@@ -167,7 +125,7 @@ def get_interdata_patterns_sim(biodata):
     return interdata
 
 #=========================================
-# get mixdata_features
+# get mixdata patterns
 #=========================================
 def get_mixdata_patterns(interdata,biodata):
     num_interdata_features=len(interdata[0])-1

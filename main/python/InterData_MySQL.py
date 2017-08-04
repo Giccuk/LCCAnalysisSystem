@@ -161,26 +161,26 @@ def getrepayratio(gamedata):
     return repayratio
 
 
-#=================
-#game data
-#=================
+#==============================================
+# Get Interaction Patterns
+#==============================================
 def get_interactiondata_MySQL(dbaddress):
 	gamemessages=getgamedataMySQL(dbaddress)
 	offerratio=getofferratio(gamemessages)
 	acceptornotratio=getacceptornotratio(gamemessages)
 	investratio=getinvestratio(gamemessages)
 	repayratio=getrepayratio(gamemessages)
-	samples=[]
-	labels=[]
+	interaction_patterns=[]
+	#labels=[]
 	for i in range(len(offerratio)):
 		if i<len(acceptornotratio[0]):
 			#print [offerratio[i],acceptornotratio[0][i]]
-			samples=samples+[[offerratio[i],acceptornotratio[0][i]]]
+			interaction_patterns=interaction_patterns+[[offerratio[i],acceptornotratio[0][i]]]
 		else:
 			j=i-len(acceptornotratio[0])
 			#print [offerratio[i],acceptornotratio[1][j]]
-			samples=samples+[[offerratio[i],acceptornotratio[1][j]]]
-		label_rand=random.randint(0,2)
-		labels=labels+[label_rand]
-	return {'features':samples,'labels':labels}
+			interaction_patterns=interaction_patterns+[[offerratio[i],acceptornotratio[1][j]]]
+		#label_rand=random.randint(0,2)
+		#labels=labels+[label_rand]
+	return samples
 
