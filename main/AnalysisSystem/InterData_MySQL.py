@@ -1,4 +1,4 @@
-import MySQLdb
+zimport MySQLdb
 import re
 import random
 
