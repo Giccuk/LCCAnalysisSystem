@@ -1,15 +1,15 @@
-import MLData,random
+import simdata,random
 import numpy as np
 from sklearn import svm
 from sklearn.metrics import accuracy_score
 
 
 #interdatafiledir_sim='/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/behaviordata_sim/behaviordata_sim.csv'
-#MLData.build_interactiondata(interdatafiledir_sim)
-#new_data=MLData.get_interactiondata_sim(interdatafiledir_sim)
+#simdata.build_interactiondata(interdatafiledir_sim)
+#new_data=simdata.get_interactiondata_sim(interdatafiledir_sim)
 
 ilpdatafiledir='/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/ilpddata/ilpddata2.csv'
-svm_data=MLData.get_ilpddata(ilpdatafiledir)
+svm_data=simdata.get_ilpddata(ilpdatafiledir)
 
 train_labels=svm_data['train_labels']
 train_features=svm_data['train_features']

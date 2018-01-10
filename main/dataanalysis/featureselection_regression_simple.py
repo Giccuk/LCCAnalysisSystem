@@ -1,13 +1,17 @@
 from sklearn.linear_model import LogisticRegression
 from sklearn import linear_model
 import numpy as np
-import MLData
+import simdata
 from sklearn.metrics import accuracy_score
 
-interdatafiledir_sim='/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/behaviordata_sim/behaviordata_sim.csv'
-ilpddatafiledir='/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/ilpddata/ilpddata2.csv'
-inputdata=MLData.get_interactiondata_sim(interdatafiledir_sim)
-inputdata=MLData.get_ilpddata(ilpddatafiledir)
+
+#------------------------------
+# Data
+#------------------------------
+interdata_sim_filedir='/Users/cancui/workspace/anaconda3/envs/abiba_analysis/src/main/resources/interdata_sim/interdata_sim.csv'
+ilpddata_filedir='/Users/cancui/workspace/anaconda3/envs/abiba_analysis/src/main/resources/ilpddata/ilpddata2.csv'
+inputdata=simdata.get_interdata_sim(interdata_sim_filedir)
+inputdata=simdata.get_ilpddata(ilpddata_filedir)
 
 train_labels_np=np.array(inputdata['train_labels'])
 train_features_np=np.array(inputdata['train_features'])
@@ -26,7 +30,7 @@ predict_result=reg_logis.predict(test_features_np)
 indx_mincoef=np.argmin(np.abs(coefresult))+1
 predict_accuracy=accuracy_score(test_labels_np,predict_result)
 
-print train_features_np.shape
-print coefresult
-print indx_mincoef
-print predict_accuracy
+print(train_features_np.shape)
+print(coefresult)
+print (indx_mincoef)
+print (predict_accuracy)

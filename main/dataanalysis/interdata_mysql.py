@@ -1,10 +1,10 @@
-zimport MySQLdb
+import MySQLdb
 import re
 import random
 
-#============================================================================
+#-------------------------------------------
 # Connect to MYSQL and pick out the data
-#============================================================================
+#-------------------------------------------
 def getallinterID(localhost):
     db=MySQLdb.connect(localhost,"host","host","lccgame")
     cursor=db.cursor()

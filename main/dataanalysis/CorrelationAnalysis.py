@@ -2,14 +2,20 @@ import random, re, csv
 import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
-import MLData
+from simdata import *
+from interdata_mysql_simple import *
 
-ilpddatafiledir = '/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/ilpddata/ilpddata2.csv'
-ilpddata = MLData.get_ilpddata(ilpddatafiledir)
-interdata = MLData.get_interdata_sim(ilpddata)
-mixdata = MLData.get_mixdata(ilpddata, interdata)
+#/Users/cancui/workspace/anaconda3/envs/abiba_analysis/src/main/resources/ilpddata/
 
-mldata=MLData.get_features_labels(mixdata,14,0.4)
+
+mixdata_sim_filedir='../resources/gamedata/mixdata_sim.csv'
+mixdata_sim=get_mldata(mixdata_sim_filedir)
+print(mixdata_sim[0])
+
+
+
+'''
+mldata=simdata.get_features_labels(mixdata,14,0.4)
 
 train_features=mldata['train_features']
 test_features=mldata['test_features']
@@ -18,7 +24,7 @@ X = np.array(train_features)
 kmeans = KMeans(n_clusters=2, random_state=0).fit(X)
 kresult=kmeans.predict(test_features)
 
-print kresult
+'''
 
 
 

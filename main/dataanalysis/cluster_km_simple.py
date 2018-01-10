@@ -1,15 +1,15 @@
 from sklearn.cluster import KMeans
 import numpy as np
-import MLData
+import simdata
 from scipy import stats
 from sklearn.metrics import accuracy_score
 from sklearn import metrics
 
 interdatafiledir_sim='/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/behaviordata_sim/behaviordata_sim.csv'
-kmdata=MLData.get_interdata_sim(interdatafiledir_sim)
+kmdata=simdata.get_interdata_sim(interdatafiledir_sim)
 
 #iplddatafiledir='/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/ilpddata/ilpddata2.csv'
-#svm_data=MLData.get_ilpddata(iplddatafiledir)
+#svm_data=simdata.get_ilpddata(iplddatafiledir)
 
 train_labels=kmdata['train_labels']
 train_features=kmdata['train_features']

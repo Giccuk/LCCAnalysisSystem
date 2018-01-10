@@ -3,9 +3,10 @@ from sklearn.cluster import KMeans
 
 #===============================================================================================
 #name:label_biodata
-#input: num_clusters,interdata_patterns,bioata_patterns
+#input: num_clusters,interdata_patterns,bio_patterns
 #output: biodata
-#function: cluster interaction data to seperate samples into sub sets, and then label biodata
+#function: 1. cluster seperate samples into different sets on the basis of their interaction data
+#          2. Use the clustering resuluts to label sample's biophysical data
 #================================================================================================
 def label_biodata(num_clusters,interdata_patterns,bioata_patterns):
     #build interdata features

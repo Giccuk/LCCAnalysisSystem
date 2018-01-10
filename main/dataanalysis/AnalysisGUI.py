@@ -1,4 +1,7 @@
 import tkinter as tk
+from show import *
+
+
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -18,6 +21,9 @@ class Application(tk.Frame):
         #role_button
         self.role_button=tk.Button(self,text="Role Selection",command=self.select_role)
         self.role_button.pack(side="bottom")
+        #show_name_button
+        self.showname_button=tk.Button(self,text="show name",command=get_name(4))
+        self.role_button.pack(side="bottom")
 
     def say_hi(self):
         print("hi there, everyone!")
@@ -34,3 +40,5 @@ root = tk.Tk()
 root.geometry("200x200")
 app = Application(root)
 app.mainloop()
+
+get_name(1)
