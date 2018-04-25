@@ -1,12 +1,17 @@
-import MySQLdb
+import mysql.connector
+#impirt MySQLdb
 import re
 import random
 
 #-------------------------------------------
 # Connect to MYSQL and pick out the data
 #-------------------------------------------
-def getallinterID(localhost):
-    db=MySQLdb.connect(localhost,"host","host","lccgame")
+def getallinterID(hostname):
+    db=mysql.connector.connect(host=hostname,
+                           database='lccgame',
+                           user='host',
+                           password='host')
+    #db=MySQLdb.connect(localhost,"host","host","lccgame")
     cursor=db.cursor()
     cursor.execute("SELECT COMM_ID FROM backup_scalsc_states ")
     db.close()
@@ -17,8 +22,12 @@ def getallinterID(localhost):
         allinterID=allinterID+(newresult[i][0],)
     return allinterID
 
-def getintagentstates(interactionID): #connect DB and get all agents' states based on interaction
-    db=MySQLdb.connect("localhost","host","host","lccgame")
+def getinterdata(interactionID): #connect DB and get all agents' states based on interaction
+    db=mysql.connector.connect(host="localhost",
+                           database='lccgame',
+                           user='host',
+                           password='host')
+    #db=MySQLdb.connect("localhost","host","host","lccgame")
     cursor=db.cursor()
     cursor.execute("SELECT STATE FROM backup_scalsc_states WHERE COMM_ID=%r" %interactionID)
     agentstates=cursor.fetchall()
@@ -35,7 +44,7 @@ def getclauseset(agentstate):
     return search_n
 
     #get agent role and ID from #2 line
-def getagentinfo(agentinfoclause):
+def getagentdef(agentinfoclause):
     pattern_agentinfo=re.compile(r'a\(\s*(?P<agentrolename>\w*)\((?P<agentrolevars>.*)\),(?P<agentid>.*)\)::=\\n')
     agent_role_name=re.search(pattern_agentinfo,agentinfoclause).group('agentrolename')
     agent_role_vars=re.search(pattern_agentinfo,agentinfoclause).group('agentrolevars').split(",")
@@ -43,22 +52,22 @@ def getagentinfo(agentinfoclause):
     return (agent_role_name,agent_role_vars,agent_id)
 
     #get message name and var
-def getmessageinfo(mbody):
-    pattern_dir=re.compile(r'(=>|<=)')
-    search_dir=re.findall(pattern_dir,mbody)
-    if search_dir:
-        if(search_dir[0]=="=>"):
-            pattern_minfo=re.compile(r'.*c\(\s*(?P<mname>\w*)\((?P<mvars>.*)\)\s=>\s*a\((.*)\).*')
-            mvars=re.search(pattern_minfo,mbody).group('mvars').split(",")
-            mname=re.search(pattern_minfo,mbody).group('mname')
+def getagentaction(mbody):
+    pattern_msgdir=re.compile(r'(=>|<=)')
+    search_msgdir=re.findall(pattern_msgdir,mbody)
+    if search_msgdir:
+        if(search_msgdir[0]=="=>"):
+            pattern_msginfo=re.compile(r'.*c\(\s*(?P<mname>\w*)\((?P<mvars>.*)\)\s=>\s*a\((.*)\).*')
+            mvars=re.search(pattern_msginfo,mbody).group('mvars').split(",")
+            mname=re.search(pattern_msginfo,mbody).group('mname')
             mdir="out"
             pattern_mtarget=re.compile(r'.*c\(\s*(?P<mname>\w*)\((?P<mvars>.*)\)\s=>\s*a\(\s*(?P<mtarget>\w*)\(.*\),.*?\).*')
             mtarget=re.search(pattern_mtarget,mbody).group('mtarget')
             return (mname,mvars,mdir,mtarget)
         else:
-            pattern_minfo=re.compile(r'.*c\(\s*(?P<mname>\w*)\((?P<mvars>.*)\)\s<=.*')
-            mvars=re.search(pattern_minfo,mbody).group('mvars').split(",")
-            mname=re.search(pattern_minfo,mbody).group('mname')
+            pattern_msginfo=re.compile(r'.*c\(\s*(?P<mname>\w*)\((?P<mvars>.*)\)\s<=.*')
+            mvars=re.search(pattern_msginfo,mbody).group('mvars').split(",")
+            mname=re.search(pattern_msginfo,mbody).group('mname')
             mdir="in"
             pattern_mtarget=re.compile(r'.*c\(\s*(?P<mname>\w*)\((?P<mvars>.*)\)\s<=\s*a\(\s*(?P<mtarget>\w*)\(.*\),.*?\).*')
             mtarget=re.search(pattern_mtarget,mbody).group('mtarget')
@@ -80,20 +89,20 @@ def getgamedataMySQL(dbaddress):
     interaction_behaviors=[]
     for internum in range(len(interIDset)):
         interID=interIDset[internum]
-        interagentstates=getintagentstates(interID)[0]
-        interprotocolID=getintagentstates(interID)[1]
+        interagentstates=getinterdata(interID)[0]
+        interprotocolID=getinterdata(interID)[1]
         startpoint=len(interaction_behaviors)
         for i in range(len(interagentstates)):
             interaction_behaviors=interaction_behaviors+[{'intid':interID,'protocolid':interprotocolID},]
         for i in range(len(interagentstates)):
             clauseset=getclauseset(str(interagentstates[i]))
-            agent_info=getagentinfo(clauseset[1])
+            agent_info=getagentdef(clauseset[1])
             interaction_behaviors[startpoint+i]['role']={'rname':agent_info[0],'rvars':agent_info[1]}
             interaction_behaviors[startpoint+i]['messages']=[]
             for linepoint in range(2,len(clauseset)):
-                if getmessageinfo(clauseset[linepoint]):
-                    minfo=getmessageinfo(clauseset[linepoint])
-                    interaction_behaviors[startpoint+i]['messages']=interaction_behaviors[startpoint+i]['messages']+[{'mname':minfo[0],'mvars':minfo[1],'mdir':minfo[2],'mtarget':minfo[3]},]
+                if getagentaction(clauseset[linepoint]):
+                    msginfo=getagentaction(clauseset[linepoint])
+                    interaction_behaviors[startpoint+i]['messages']=interaction_behaviors[startpoint+i]['messages']+[{'mname':msginfo[0],'mvars':msginfo[1],'mdir':msginfo[2],'mtarget':msginfo[3]},]
     return interaction_behaviors
 
 #==================================================
