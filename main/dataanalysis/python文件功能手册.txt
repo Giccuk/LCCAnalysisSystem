@@ -1,0 +1,22 @@
+1. classify_svm_simple.py: 从 ilpddata 的 csv 文件里，使用 SVM 来做简单的分类
+2. cluster_km_simple.py: 从 bihaviouradata_sim.csv 文件里，使用 KM 来做简单的聚类
+3. correlationAnalysis.py: 从 mixdata_sim.csv 里做简单的
+4. featureselection_NN_simple.py: 从 seeds_dataset.txt 中使用 NN 做训练
+5. featureselection_regression_simple.py: 从 interdata_sim 和 ilpddata 里使用线性回归模型做训练
+
+6. fixdata_gm_pi.ipn: 对数据库内容进行清理
+7. fixdata_backup_pi.ipn: 对数据库内容进行清理
+
+8. interdata_mysql.py: 从数据库lccgame 的表 backup_scalsc_states 里得到 interdata 例如 ratio
+9. interdata_mysql_simple.py: 从数据库lccgame 的表 playerinfo 和 gamemsgs 里得到各个角色的 ratio
+10. interdata_mysql_universe.ipynb: 从 backup_scalsc_states 里获得 interdata
+10.1. interdata_mysql_universe.py: 从 backup_scalsc_states 里获得 interdata
+
+11. mixanalysis_bayes.py: 从 intdata.csv 和 biodata.csv 里做聚类（kmeans）+分类（bayes）的操作
+12. mixanalysis_multiple.py: 采用多个分类器，从 intdata.csv 和 biodata.csv 里做聚类+分类的操作
+13. mixanalysis_nn.py: 从 intdata.csv 和 biodata.csv 里做聚类（kmeans）+分类（nn）的操作
+14. mixanalysis_svm.py: 从 intdata.csv 和 biodata.csv 里做聚类（kmeans）+分类（svm）的操作
+
+
+15. mixdatanalysis.ipynb: 从 interdata_sim.csv biodata_sim.csv 里面，做模拟数据，再做聚类(kmeans)+分类(svm)
+16. mixdatanalysis.py: 

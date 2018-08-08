@@ -6,6 +6,11 @@ import random
 #-------------------------------------------
 # Connect to MYSQL and pick out the data
 #-------------------------------------------
+#---------------------------------
+#fun: get all interID in lccgame from backup_scalsc_states under a hostname (eg.locakhost)
+#in: hostname
+#out: interid,eg.['inter11','int12']
+#---------------------------------
 def getallinterID(hostname):
     db=mysql.connector.connect(host=hostname,
                            database='lccgame',
@@ -21,7 +26,10 @@ def getallinterID(hostname):
     for i in range(len(newresult)):
         allinterID=allinterID+(newresult[i][0],)
     return allinterID
-
+#---------------------------------
+#fun: get interdata under an interID from backup_scalsc_states
+#in: interID
+#---------------------------------
 def getinterdata(interactionID): #connect DB and get all agents' states based on interaction
     db=mysql.connector.connect(host="localhost",
                            database='lccgame',
@@ -36,8 +44,9 @@ def getinterdata(interactionID): #connect DB and get all agents' states based on
     db.close()
     agentdef=(agentstates,protocolname[0][0])
     return agentdef
-
-#find out how many lines in one agent state
+#---------------------------------
+#fun: find out how many lines in one agent state
+#---------------------------------
 def getclauseset(agentstate):
     pattern_n=re.compile(r'.*?\\n')
     search_n=re.findall(pattern_n,agentstate)
@@ -75,12 +84,17 @@ def getagentaction(mbody):
     else:
         return False
 
+# ---------------------------------
+#fun: get interdata from backup_scalsc_states
+#int: hostname
+#out:
 #interaction_behaviors=[
 # {intid,protocolid,role:{rname,rvars},messages:{mname,mvars,mdir,mtarget}},
 # {intid,protocolid,role:{rname,rvars},messages:{mname,mvars,mdir,mtarget}},
 # ...
 # {intid,protocolid,role:{rname,rvars},messages:{mname,mvars,mdir,mtarget}}
 # ]
+#---------------------------------
 def getgamedataMySQL(dbaddress):
     #get all happened interactions
     interIDset=getallinterID(dbaddress)
@@ -109,6 +123,7 @@ def getgamedataMySQL(dbaddress):
 #Query for information from interacion sequences
 #==================================================
 
+# get all proposers' offer ratio
 def getofferratio(gamedata):
     offerratio=[]
     for i in range(len(gamedata)):
@@ -120,6 +135,7 @@ def getofferratio(gamedata):
                     offerratio=offerratio+[theratio,]
     return offerratio
 
+# get all responders' acceptornot ratio
 def getacceptornotratio(gamedata):
     acceptratio=[]
     rejectratio=[]
@@ -171,7 +187,12 @@ def getrepayratio(gamedata):
 
 
 #==============================================
-# Get Interaction Patterns
+# fun: Get Interaction Patterns
+# in: hostname
+# out: [[offerratio1,accpetratio1],
+#       [offerratio2,accpetratio2],
+#       ...
+#      ]
 #==============================================
 def get_interactiondata_MySQL(dbaddress):
 	gamemessages=getgamedataMySQL(dbaddress)
