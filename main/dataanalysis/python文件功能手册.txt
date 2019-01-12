@@ -19,4 +19,4 @@
 
 
 15. mixdatanalysis.ipynb: 从 interdata_sim.csv biodata_sim.csv 里面，做模拟数据，再做聚类(kmeans)+分类(svm)
-16. mixdatanalysis.py: 
+16. mixdatanalysis.py:
