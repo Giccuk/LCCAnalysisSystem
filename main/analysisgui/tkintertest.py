@@ -2,7 +2,7 @@ import tkinter as tk
 from show import *
 import sys
 
-sys.path.insert(0,'/Users/cancui/workspace/anaconda3/envs/abiba_analysis/src/main/AnalysisSystem/')
+sys.path.insert(0,'/Users/cancui/anaconda3/envs/abiba_analysis_v2/src/main/AnalysisSystem/')
 
 from mldatatest import get_interdata_mysql
 

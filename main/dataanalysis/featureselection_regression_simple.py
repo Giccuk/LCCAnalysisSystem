@@ -8,8 +8,8 @@ from sklearn.metrics import accuracy_score
 #------------------------------
 # Data
 #------------------------------
-interdata_sim_filedir='/Users/cancui/workspace/anaconda3/envs/abiba_analysis/src/main/resources/interdata_sim/interdata_sim.csv'
-ilpddata_filedir='/Users/cancui/workspace/anaconda3/envs/abiba_analysis/src/main/resources/ilpddata/ilpddata2.csv'
+interdata_sim_filedir='/Users/cancui/anaconda3/envs/abiba_analysis_v2/src/main/resources/interdata_sim/interdata_sim.csv'
+ilpddata_filedir='/Users/cancui/anaconda3/envs/abiba_analysis_v2/src/main/resources/ilpddata/ilpddata2.csv'
 inputdata=simdata.get_interdata_sim(interdata_sim_filedir)
 inputdata=simdata.get_ilpddata(ilpddata_filedir)
 

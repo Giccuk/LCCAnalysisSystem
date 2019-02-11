@@ -33,6 +33,7 @@ for i in range(len(kresult)):
 
 print kresult
 print test_labels
+#evaluation on k-means
 print stats.ttest_ind(kresult,test_labels)
 print accuracy_score(kresult,test_labels)
 

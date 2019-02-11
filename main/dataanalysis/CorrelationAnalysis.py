@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from simdata import *
 from interdata_mysql_simple import *
 
-#/Users/cancui/workspace/anaconda3/envs/abiba_analysis/src/main/resources/ilpddata/
+#/Users/cancui/anaconda3/envs/abiba_analysis_v2/src/main/resources/ilpddata/
 
 
 mixdata_sim_filedir='../resources/gamedata/mixdata_sim.csv'

@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 
 ##########################################################
-# data process
+# data process by csv file
 ##########################################################
 #============================================
 # name：create_csvfile
@@ -54,7 +54,7 @@ def get_mldata(mldata_filedir):
 #
 # 4. file directory:
 #   1) '/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/ilpddata/ilpddata2.csv',
-#   2) '/Users/cancui/workspace/anaconda3/envs/abiba_analysis/src/main/resources/ilpddata/ilpddata2.csv'
+#   2) '/Users/cancui/anaconda3/envs/abiba_analysis_v2/src/main/resources/ilpddata/ilpddata2.csv'
 ######################################################################################################################
 
 #=====================================================================================
@@ -117,7 +117,7 @@ def get_ilpddata_clean(datafiledir):
 #out: seed data
 #fun: read seed data file, create seeds data in form of [[patterns, label],[],...,[]]
 #====================================================================================================
-# '/Users/cancui/workspace/anaconda3/envs/abiba_analysis/src/main/resources/seeds/seeds_dataset.txt'
+# '/Users/cancui/anaconda3/envs/abiba_analysis_v2/src/main/resources/seeds/seeds_dataset.txt'
 def get_seedsdata(datafiledir):
     with open(datafiledir, "r") as seedssrcfile:
         seedssrclines = seedssrcfile.readlines()
@@ -146,11 +146,16 @@ def get_seedsdata(datafiledir):
 # Simulated data
 ######################################################################################################
 #================================================================================
+#name: get_interdata_sim
+#in: biodata
+#out: simulated interdata
+#fun:
 # Get Simulated Interaction data
-# 1. OR:offer_rate, AR:accept_rate, IR:invest_rate, RR:repay_rate
-# 2. depressive:  OR:[0.6,0,9], AR:[0.4,1.0], IR:[0.5,0.7], RR:[0.4,0.6]
-#   no_depessive: OR:[0.3,0.5], AR:[0.6,1.0], IR:[0.1,0.3], RR:[0.1,0.3]
+# 1. OR:offer_rate, CR:choice_rate, IR:invest_rate, RR:repay_rate
+# 2. depressive:  OR:[0.6,0,9], CR:[0.4,1.0], IR:[0.5,0.7], RR:[0.4,0.6]
+#   no_depessive: OR:[0.3,0.5], CR:[0.6,1.0], IR:[0.1,0.3], RR:[0.1,0.3]
 # 3. "1" for depression, "0" for not_depression
+# 4. interdata=[[OR,CR,IR,RR,label],[]...,[]]
 #================================================================================
 # '/Users/cancui/workspace/virENV/lccanalysissystem/src/main/resources/behaviordata_sim/behaviordata_sim.csv'
 def get_interdata_sim(biodata):
@@ -171,9 +176,12 @@ def get_interdata_sim(biodata):
             interdata = interdata + [[notdep_offerrate, notdep_choicerate, notdep_investrate, notdep_repayrate,0]]
     return interdata
 
-#=========================================
-# get mixdata_sim
-#=========================================
+#=============================================================================
+# name:get mixdata_sim
+# in: two lists named as "interdata", "biodata"
+# out: list named “mixdata_sim” =[[interdata,biodata,label]]
+# fun: mix data from "interdata" and "biodata" to generate mixdata_sim
+#=============================================================================
 def get_mixdata_sim(interdata,biodata):
     num_interdata_features=len(interdata[0])-1
     num_biodata_features=len(biodata[0])-1
