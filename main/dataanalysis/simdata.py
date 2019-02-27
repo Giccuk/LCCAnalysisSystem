@@ -224,3 +224,59 @@ def makegamedata():
     create_csvfile(interdata_sim,interdata_sim_filedir)
     create_csvfile(mixdata_sim,mixdata_sim_filedir)
 
+#==============================================
+# make mixdata from scratch
+#==============================================
+
+#-------------------------------------------------------------------------------------------------------------
+# aim: make behavior features and labels
+# in: sample_num: number of samples
+#     d_ratio: ratio of depressive sample [0,1]
+#     bhf_range: feature range eg. {'or':[6,10,3,6],"cr":[4,11,6,11],"ir":[5,8,1,4],"rr":[4,7,1,4]}
+# out: {"syn_bhf":syn_bhf,"syn_pre_bhl":syn_pre_bhl}
+#--------------------------------------------------------------------------------------------------------------
+def make_syn_bhdata(sample_num,d_ratio,bhf_range):
+    # calculate num of depressive sample
+    dsample_num=math.ceil(sample_num*d_ratio)
+    ndsample_num=sample_num-dsample_num
+    dsample_bhf_or=np.random.randint(bhf_range["or"][0],bhf_range["or"][1],dsample_num).reshape(dsample_num,1)
+    dsample_bhf_cr=np.random.randint(bhf_range["cr"][0],bhf_range["cr"][1],dsample_num).reshape(dsample_num,1)
+    dsample_bhf_ir=np.random.randint(bhf_range["ir"][0],bhf_range["ir"][1],dsample_num).reshape(dsample_num,1)
+    dsample_bhf_rr=np.random.randint(bhf_range["rr"][0],bhf_range["rr"][1],dsample_num).reshape(dsample_num,1)
+    temp_dbhf=[dsample_bhf_cr,dsample_bhf_ir,dsample_bhf_rr]
+    dsample_bhf=dsample_bhf_or
+    for i in range(3):
+        dsample_bhf=np.insert(dsample_bhf,[i+1],temp_dbhf[i],axis=1)
+    ndsample_bhf_or=np.random.randint(bhf_range["or"][2],bhf_range["or"][3],ndsample_num).reshape(ndsample_num,1)
+    ndsample_bhf_cr=np.random.randint(bhf_range["cr"][2],bhf_range["cr"][3],ndsample_num).reshape(ndsample_num,1)
+    ndsample_bhf_ir=np.random.randint(bhf_range["ir"][2],bhf_range["rr"][3],ndsample_num).reshape(ndsample_num,1)
+    ndsample_bhf_rr=np.random.randint(bhf_range["rr"][2],bhf_range["rr"][3],ndsample_num).reshape(ndsample_num,1)
+    temp_ndbhf=[ndsample_bhf_cr,ndsample_bhf_ir,ndsample_bhf_rr]
+    ndsample_bhf=ndsample_bhf_or
+    for i in range(3):
+        ndsample_bhf=np.insert(ndsample_bhf,[i+1],temp_ndbhf[i],axis=1)
+    syn_bhf=np.concatenate((dsample_bhf, ndsample_bhf), axis=0)
+    syn_pre_bhl=np.append(np.ones(dsample_num),np.zeros(ndsample_num))
+    return {"syn_bhf":syn_bhf,"syn_pre_bhl":syn_pre_bhl}
+
+#-------------------------------------------------------------------------------------------------------------
+# aim: make non-behavior features 
+# in: nbhf_num: number non-behavior features 
+#     sample_num: number of samples
+# out: syn_nbhf
+# spec: All nbhf follows natural distribution
+#--------------------------------------------------------------------------------------------------------------
+def make_syn_nbhf(nbhf_num,sample_num):
+    rand_center=np.random.randint(0,100,nbhf_num)
+    rand_sigma=np.random.randint(0,5,nbhf_num)
+    #rand_center=np.zeros(nbhf_num)
+    #rand_sigma=np.ones(nbhf_num)*100
+    
+    temp_nbhf=np.random.normal(rand_center[0], rand_sigma[0], sample_num).reshape(sample_num,1)
+    for i in range(1,nbhf_num):
+        x=np.random.normal(rand_center[i], rand_sigma[i], sample_num).reshape(sample_num,1)
+        temp_nbhf=np.insert(temp_nbhf,[1],x,axis=1)
+
+    syn_nbhf=np.sort(temp_nbhf,axis=0)
+    return syn_nbhf
+
